@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#f4ede2"/>
+  <!-- Spiral / redirect arrow representing hijacking distraction -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#c97b5e" stroke-width="32" stroke-dasharray="900 200" stroke-linecap="round"/>
+  <!-- D letterform in terracotta -->
+  <text x="256" y="310" font-family="Georgia, serif" font-size="200" font-weight="900" font-style="italic" text-anchor="middle" fill="#2a2620">D</text>
+</svg>

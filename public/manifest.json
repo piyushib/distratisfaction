@@ -1,0 +1,25 @@
+{
+  "name": "Distratisfaction",
+  "short_name": "Distratisfaction",
+  "description": "Turn scroll urges into 60-second wins.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4ede2",
+  "theme_color": "#f4ede2",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "health", "utilities"]
+}
