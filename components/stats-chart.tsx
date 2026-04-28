@@ -51,7 +51,7 @@ export function StatsChart({ data }: { data: DataPoint[] }) {
             dataKey="day"
             axisLine={false}
             tickLine={false}
-            tick={{ fontFamily: 'var(--font-jetbrains)', fontSize: 9, fill: '#8a7f74', textTransform: 'uppercase' }}
+            tick={{ fontFamily: 'var(--font-jetbrains)', fontSize: 9, fill: '#8a7f74' }}
           />
           <YAxis
             axisLine={false}
