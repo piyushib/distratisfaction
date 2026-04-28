@@ -5,7 +5,7 @@ import type { GoalId } from './goals'
 export type { Category, Task, Session } from './types'
 import type { Category, Task, Session } from './types'
 
-interface DistratisfactionState {
+interface DopaState {
   tasks: Task[]
   sessions: Session[]
   // Active session being built across pages
@@ -37,7 +37,7 @@ interface DistratisfactionState {
   deleteTask: (id: string) => void
 }
 
-export const useStore = create<DistratisfactionState>()(
+export const useStore = create<DopaState>()(
   persist(
     (set, get) => ({
       tasks: SEED_TASKS,
@@ -113,7 +113,7 @@ export const useStore = create<DistratisfactionState>()(
         set((state) => ({ tasks: state.tasks.filter((t) => t.id !== id) })),
     }),
     {
-      name: 'distratisfaction-v1',
+      name: 'dopa-v1',
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true)
       },

@@ -70,7 +70,7 @@ export default function SettingsPage() {
           Task Pools
         </h2>
         <p className="mt-2 font-serif text-xs italic text-ink-light leading-relaxed">
-          These are the tasks Distratisfaction draws from. Keep them tight — 60 seconds max.
+          These are the tasks Dopa draws from. Keep them tight — 60 seconds max.
         </p>
         {/* Goals summary + re-onboard link */}
         <div className="mt-4 flex items-center justify-between border border-ink/10 bg-parchment px-3 py-2">

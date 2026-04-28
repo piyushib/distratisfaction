@@ -63,7 +63,7 @@ export default function HomePage() {
           a tool for
         </p>
         <h1 className="mt-1 font-serif text-4xl font-black italic leading-none text-ink">
-          Distratisfaction
+          Dopa
         </h1>
         <p className="mt-2 font-serif text-sm italic text-ink-light leading-relaxed">
           Turn the urge to scroll into&nbsp;60&nbsp;seconds of progress.

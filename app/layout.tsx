@@ -17,13 +17,13 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Distratisfaction',
+  title: 'Dopa',
   description: 'Turn scroll urges into 60-second wins.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Distratisfaction',
+    title: 'Dopa',
   },
   icons: {
     apple: '/icon-192',

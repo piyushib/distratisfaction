@@ -30,7 +30,7 @@ export default function OnboardingPage() {
           welcome to
         </p>
         <h1 className="mt-1 font-serif text-4xl font-black italic leading-none text-ink">
-          Distratisfaction
+          Dopa
         </h1>
         <p className="mt-5 font-serif text-xl font-semibold italic leading-snug text-ink">
           When distraction hits, what do you want to build?
