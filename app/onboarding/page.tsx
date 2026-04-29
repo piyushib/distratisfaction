@@ -23,7 +23,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col px-7 pb-24 pt-14">
+    <main className="flex min-h-screen flex-col px-7 pb-10 pt-14">
       {/* Header */}
       <header className="mb-10">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted">
@@ -91,8 +91,8 @@ export default function OnboardingPage() {
         )}
       </div>
 
-      {/* CTA — fixed at bottom */}
-      <div className="fixed bottom-0 left-1/2 w-full max-w-[440px] -translate-x-1/2 border-t border-ink/10 bg-parchment px-7 py-5">
+      {/* CTA */}
+      <div className="mt-6 border-t border-ink/10 pt-5">
         <button
           onClick={handleSubmit}
           disabled={selected.length === 0}

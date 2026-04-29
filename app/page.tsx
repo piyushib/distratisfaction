@@ -17,6 +17,11 @@ export default function HomePage() {
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  // Wait for hydration before checking onboarding — avoids false redirect on first render
+  useEffect(() => {
+    if (!mounted) return
     if (!hasOnboarded) {
       router.replace('/onboarding')
       return
@@ -32,7 +37,7 @@ export default function HomePage() {
     window.addEventListener('beforeinstallprompt', handler)
     window.addEventListener('appinstalled', () => setInstalled(true))
     return () => window.removeEventListener('beforeinstallprompt', handler)
-  }, [])
+  }, [mounted, hasOnboarded])
 
   async function handleInstall() {
     if (!installPrompt) return
