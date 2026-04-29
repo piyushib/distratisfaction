@@ -9,31 +9,14 @@ export function GET() {
         style={{
           width: 192,
           height: 192,
-          background: '#f4ede2',
+          background: '#050f05',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          borderRadius: 32,
+          borderRadius: 40,
         }}
       >
-        <div
-          style={{
-            width: 140,
-            height: 140,
-            background: '#c97b5e',
-            borderRadius: 20,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#f4ede2',
-            fontSize: 96,
-            fontWeight: 900,
-            fontStyle: 'italic',
-            fontFamily: 'serif',
-          }}
-        >
-          D
-        </div>
+        <div style={{ fontSize: 120, lineHeight: 1 }}>🧠</div>
       </div>
     ),
     { width: 192, height: 192 }

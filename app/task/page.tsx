@@ -176,7 +176,7 @@ export default function TaskPage() {
               cy="56"
               r="50"
               fill="none"
-              stroke={isLast15 ? '#f0d4c8' : '#e8ddd0'}
+              stroke={isLast15 ? '#0a2a0a' : '#091509'}
               strokeWidth="4"
             />
             <circle
@@ -184,7 +184,7 @@ export default function TaskPage() {
               cy="56"
               r="50"
               fill="none"
-              stroke={isLast15 ? '#c97b5e' : '#6b8f71'}
+              stroke={isLast15 ? '#32CD32' : '#00FA9A'}
               strokeWidth="4"
               strokeLinecap="round"
               strokeDasharray={`${2 * Math.PI * 50}`}

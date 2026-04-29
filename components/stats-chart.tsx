@@ -51,20 +51,20 @@ export function StatsChart({ data }: { data: DataPoint[] }) {
             dataKey="day"
             axisLine={false}
             tickLine={false}
-            tick={{ fontFamily: 'var(--font-jetbrains)', fontSize: 9, fill: '#8a7f74' }}
+            tick={{ fontFamily: 'var(--font-jetbrains)', fontSize: 9, fill: '#3a6b3a' }}
           />
           <YAxis
             axisLine={false}
             tickLine={false}
             allowDecimals={false}
-            tick={{ fontFamily: 'var(--font-jetbrains)', fontSize: 9, fill: '#8a7f74' }}
+            tick={{ fontFamily: 'var(--font-jetbrains)', fontSize: 9, fill: '#3a6b3a' }}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: '#e8ddd0' }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: '#091509' }} />
           <Bar dataKey="count" radius={[2, 2, 0, 0]}>
             {data.map((entry) => (
               <Cell
                 key={entry.day}
-                fill={entry.day === today ? '#c97b5e' : '#d9cfc3'}
+                fill={entry.day === today ? '#32CD32' : '#1a8a1a'}
               />
             ))}
           </Bar>

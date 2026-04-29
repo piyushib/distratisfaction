@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="112" fill="#c97b5e"/>
-  <!-- Brain shape -->
-  <g fill="none" stroke="#f4ede2" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="512" height="512" rx="112" fill="#050f05"/>
+  <g fill="none" stroke="#32CD32" stroke-linecap="round" stroke-linejoin="round">
     <!-- Left hemisphere -->
     <path stroke-width="18"
       d="M200 320
@@ -23,18 +22,18 @@
          C300 82 280 92 272 100
          L256 108"/>
     <!-- Center divide -->
-    <line x1="256" y1="108" x2="256" y2="330" stroke-width="14"/>
+    <line x1="256" y1="108" x2="256" y2="330" stroke-width="14" stroke="#00FA9A"/>
     <!-- Brain folds left -->
-    <path stroke-width="13" d="M190 170 C178 178 176 196 188 202"/>
-    <path stroke-width="13" d="M175 228 C168 244 178 258 194 256"/>
-    <path stroke-width="13" d="M195 282 C186 294 192 310 206 312"/>
+    <path stroke-width="13" stroke="#7FFF00" d="M190 170 C178 178 176 196 188 202"/>
+    <path stroke-width="13" stroke="#ADFF2F" d="M175 228 C168 244 178 258 194 256"/>
+    <path stroke-width="13" stroke="#7FFF00" d="M195 282 C186 294 192 310 206 312"/>
     <!-- Brain folds right -->
-    <path stroke-width="13" d="M322 170 C334 178 336 196 324 202"/>
-    <path stroke-width="13" d="M337 228 C344 244 334 258 318 256"/>
-    <path stroke-width="13" d="M317 282 C326 294 320 310 306 312"/>
+    <path stroke-width="13" stroke="#7FFF00" d="M322 170 C334 178 336 196 324 202"/>
+    <path stroke-width="13" stroke="#ADFF2F" d="M337 228 C344 244 334 258 318 256"/>
+    <path stroke-width="13" stroke="#7FFF00" d="M317 282 C326 294 320 310 306 312"/>
     <!-- Bottom of brain -->
     <path stroke-width="18" d="M200 320 C220 336 292 336 312 320"/>
     <!-- Little stem -->
-    <path stroke-width="14" d="M242 330 C238 348 242 362 256 366 C270 362 274 348 270 330"/>
+    <path stroke-width="14" stroke="#00FA9A" d="M242 330 C238 348 242 362 256 366 C270 362 274 348 270 330"/>
   </g>
 </svg>
