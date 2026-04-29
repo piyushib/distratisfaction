@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { SEED_TASKS, generateTasksForGoals } from './seed'
 import type { GoalId } from './goals'
+import { COMMUNITY_POOLS, type CommunityPoolId } from './community'
 export type { Category, Task, Session } from './types'
 import type { Category, Task, Session } from './types'
 
@@ -16,6 +17,8 @@ interface DopaState {
   // Onboarding
   hasOnboarded: boolean
   selectedGoals: GoalId[]
+  // Community pools
+  addedCommunityPools: CommunityPoolId[]
 
   // Hydration
   setHasHydrated: (v: boolean) => void
@@ -23,6 +26,10 @@ interface DopaState {
   // Onboarding
   completeOnboarding: (goals: GoalId[]) => void
   resetOnboarding: () => void
+
+  // Community pools
+  addCommunityPool: (poolId: CommunityPoolId) => void
+  removeCommunityPool: (poolId: CommunityPoolId) => void
 
   // Session flow
   setPendingCategory: (cat: Category) => void
@@ -48,6 +55,7 @@ export const useStore = create<DopaState>()(
       _hasHydrated: false,
       hasOnboarded: false,
       selectedGoals: [],
+      addedCommunityPools: [],
 
       setHasHydrated: (v) => set({ _hasHydrated: v }),
 
@@ -63,6 +71,31 @@ export const useStore = create<DopaState>()(
 
       resetOnboarding: () =>
         set({ hasOnboarded: false, selectedGoals: [], tasks: SEED_TASKS }),
+
+      addCommunityPool: (poolId) => {
+        const pool = COMMUNITY_POOLS.find((p) => p.id === poolId)
+        if (!pool) return
+        const newTasks = pool.tasks.map((t, i) => ({
+          id: `community-${poolId}-${i}`,
+          category: t.category,
+          text: t.text,
+          createdAt: 2, // 2 = community-sourced
+        }))
+        set((state) => ({
+          addedCommunityPools: [...state.addedCommunityPools, poolId],
+          tasks: [
+            ...state.tasks.filter((t) => !t.id.startsWith(`community-${poolId}-`)),
+            ...newTasks,
+          ],
+        }))
+      },
+
+      removeCommunityPool: (poolId) => {
+        set((state) => ({
+          addedCommunityPools: state.addedCommunityPools.filter((id) => id !== poolId),
+          tasks: state.tasks.filter((t) => !t.id.startsWith(`community-${poolId}-`)),
+        }))
+      },
 
       setPendingCategory: (cat) => set({ pendingCategory: cat }),
       setPendingTask: (task) => set({ pendingTask: task }),

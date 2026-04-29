@@ -1,5 +1,40 @@
 'use client'
 
+import Link from 'next/link'
+import { useStore } from '@/lib/store'
+import { COMMUNITY_POOLS } from '@/lib/community'
+
+function CommunityFeature() {
+  const addedPools = useStore((s) => s.addedCommunityPools)
+  return (
+    <div className="mx-7 mt-6 border-2 border-terra bg-terra-pale px-5 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-widest text-terra-dark mb-1">
+            live now
+          </p>
+          <p className="font-serif text-lg font-black italic text-ink leading-tight">
+            Community Task Pools
+          </p>
+          <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-ink-muted">
+            {addedPools.length}/{COMMUNITY_POOLS.length} pools added
+          </p>
+        </div>
+        <span className="text-3xl">🌱</span>
+      </div>
+      <p className="mt-3 font-serif text-sm italic text-ink-light leading-relaxed">
+        Tasks written by writers, founders, students, and people in recovery. Add a pool and their tasks mix into your rotation.
+      </p>
+      <Link
+        href="/community"
+        className="mt-4 inline-block border-2 border-terra bg-terra px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-parchment hover:bg-terra-dark transition-colors"
+      >
+        browse pools →
+      </Link>
+    </div>
+  )
+}
+
 const products = [
   {
     id: 'journal',
@@ -56,17 +91,6 @@ const products = [
     badgeColor: 'border-terra/30 bg-terra-pale text-terra-dark',
     available: false,
   },
-  {
-    id: 'community',
-    emoji: '🌱',
-    name: 'Community Task Pools',
-    tagline: 'Tasks written by people like you.',
-    description: 'Access curated task pools from the Dopa community — writers, founders, students, and people in recovery. Rotating monthly.',
-    price: '$2/mo',
-    badge: 'Digital',
-    badgeColor: 'border-sage/30 bg-sage-pale text-sage',
-    available: false,
-  },
 ]
 
 export default function ShopPage() {
@@ -84,6 +108,14 @@ export default function ShopPage() {
           Physical goods and digital upgrades — tools to take the practice offline.
         </p>
       </header>
+
+      {/* Community pools — live feature */}
+      <CommunityFeature />
+
+      {/* Divider */}
+      <div className="mx-7 mt-8 mb-2">
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted">coming soon</p>
+      </div>
 
       {/* Notify banner */}
       <div className="mx-7 mt-6 border border-terra/30 bg-terra-pale px-4 py-3">
