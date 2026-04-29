@@ -11,9 +11,8 @@ export async function GET() {
     .limit(200)
 
   if (error) {
-    console.error('Supabase fetch error:', error)
-    return NextResponse.json({ tasks: [] }, { status: 500 })
+    return NextResponse.json({ tasks: [], error: error.message, code: error.code }, { status: 500 })
   }
 
-  return NextResponse.json({ tasks: data ?? [] })
+  return NextResponse.json({ tasks: data ?? [], count: data?.length ?? 0 })
 }
