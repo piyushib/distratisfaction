@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useStore } from '@/lib/store'
 import { COMMUNITY_POOLS, getCurrentMonth, type CommunityPoolId } from '@/lib/community'
 import { CATEGORY_META } from '@/lib/store'
 import type { Category } from '@/lib/store'
+
+type LiveTask = { id: string; text: string; category: Category; submitted_at: string }
 
 const CATEGORY_COLORS: Record<Category, string> = {
   learn:  'border-ink/20 bg-parchment-dark text-ink',
@@ -21,6 +23,16 @@ export default function CommunityPage() {
   const removeCommunityPool = useStore((s) => s.removeCommunityPool)
   const [expanded, setExpanded] = useState<CommunityPoolId | null>(null)
   const [justAdded, setJustAdded] = useState<CommunityPoolId | null>(null)
+  const [liveTasks, setLiveTasks] = useState<LiveTask[]>([])
+  const [liveLoading, setLiveLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/tasks/community')
+      .then((r) => r.json())
+      .then((d) => setLiveTasks(d.tasks ?? []))
+      .catch(() => {})
+      .finally(() => setLiveLoading(false))
+  }, [])
 
   function handleTogglePool(poolId: CommunityPoolId) {
     if (addedPools.includes(poolId)) {
@@ -148,11 +160,50 @@ export default function CommunityPage() {
         })}
       </div>
 
+      {/* Live community submissions */}
+      <div className="mt-8 px-7">
+        <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted mb-1">
+          from the community
+        </p>
+        <p className="font-serif text-xs italic text-ink-light mb-4 leading-relaxed">
+          Tasks submitted and approved from Dopa users — shared publicly by people like you.
+        </p>
+
+        {liveLoading && (
+          <p className="font-mono text-[10px] text-ink-muted uppercase tracking-widest">loading…</p>
+        )}
+
+        {!liveLoading && liveTasks.length === 0 && (
+          <div className="border border-ink/10 px-4 py-5 text-center">
+            <p className="font-serif text-sm italic text-ink-light">No community submissions yet.</p>
+            <p className="mt-1 font-mono text-[9px] text-ink-muted uppercase tracking-widest">
+              be the first — share a task from Settings
+            </p>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-3">
+          {liveTasks.map((task) => (
+            <div key={task.id} className="border border-ink/10 bg-parchment-light px-4 py-3">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className={`border px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-widest ${CATEGORY_COLORS[task.category]}`}>
+                  {CATEGORY_META[task.category].emoji} {CATEGORY_META[task.category].label}
+                </span>
+                <span className="font-mono text-[9px] text-ink-muted">
+                  {new Date(task.submitted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </span>
+              </div>
+              <p className="font-serif text-sm text-ink leading-relaxed">{task.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Footer note */}
-      <div className="px-7 pt-6">
+      <div className="px-7 pt-8 pb-4">
         <p className="font-serif text-xs italic text-ink-muted leading-relaxed">
           Added pools mix into your existing task rotation — they don&apos;t replace your personal tasks.
-          Remove any pool at any time.
+          Remove any pool at any time. Share your own tasks from the Tasks page.
         </p>
       </div>
     </main>

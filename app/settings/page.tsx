@@ -7,6 +7,7 @@ import type { Category, Task } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { SubmitTask } from '@/components/submit-task'
 
 const CATEGORIES: Category[] = ['learn', 'absorb', 'hustle', 'reset']
 
@@ -14,6 +15,7 @@ export default function SettingsPage() {
   const router = useRouter()
   const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals } = useStore()
   const [mounted, setMounted] = useState(false)
+  const [showSubmit, setShowSubmit] = useState(false)
   const [activeCategory, setActiveCategory] = useState<Category>('learn')
   const [newTaskText, setNewTaskText] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -171,6 +173,28 @@ export default function SettingsPage() {
             Tip: start with a verb. "Write", "Read", "Name", "Look up"…
           </p>
         </div>
+      </div>
+
+      {/* Share a task with the community */}
+      <div className="px-7 pt-8 border-t border-ink/10 mt-6">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted">community</p>
+            <p className="font-serif text-sm font-bold text-ink mt-0.5">Share a task</p>
+            <p className="font-serif text-xs italic text-ink-muted leading-snug mt-0.5">
+              Submit a task privately or to the community pool.
+            </p>
+          </div>
+          {!showSubmit && (
+            <button
+              onClick={() => setShowSubmit(true)}
+              className="flex-shrink-0 border-2 border-terra bg-terra px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-parchment hover:bg-terra-dark transition-colors"
+            >
+              + share
+            </button>
+          )}
+        </div>
+        {showSubmit && <SubmitTask onClose={() => setShowSubmit(false)} />}
       </div>
 
       {/* Reset to defaults */}
