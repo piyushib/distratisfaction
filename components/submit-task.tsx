@@ -46,7 +46,7 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
         <p className="font-serif text-base font-bold italic text-ink">Submitted.</p>
         <p className="mt-1 font-serif text-sm italic text-ink-light leading-relaxed">
           {isPublic
-            ? `Your task is pending review — once approved it'll appear in everyone's community pool.`
+            ? `Your task is now live in the community pool. Others will see it on the Community page.`
             : `Saved privately to your own task list.`}
         </p>
         <button
@@ -125,7 +125,7 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
             </p>
             <p className="mt-0.5 font-serif text-xs italic text-ink-muted leading-snug">
               {isPublic
-                ? 'Submitted for review — may appear in everyone\'s community pool'
+                ? 'Visible to everyone in the community pool immediately'
                 : 'Only added to your own task list, stays on your device'}
             </p>
           </div>
@@ -155,7 +155,7 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
         disabled={!text.trim() || status === 'submitting'}
         className="mt-4 w-full border-2 border-terra bg-terra py-3 font-mono text-[10px] uppercase tracking-widest text-parchment hover:bg-terra-dark disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        {status === 'submitting' ? 'submitting…' : isPublic ? 'submit for review →' : 'save privately →'}
+        {status === 'submitting' ? 'submitting…' : isPublic ? 'share with community →' : 'save privately →'}
       </button>
     </div>
   )

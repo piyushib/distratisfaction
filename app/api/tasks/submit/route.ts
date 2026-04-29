@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       text: text.trim().slice(0, 500),
       category,
       is_public: !!is_public,
-      status: is_public ? 'pending' : 'private',
+      status: is_public ? 'approved' : 'private',
       anonymous_user_id,
       note: note?.trim().slice(0, 200) || null,
     })
