@@ -64,14 +64,11 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col pb-20">
       {/* Header */}
       <header className="px-7 pt-12">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted">
-          a tool for
-        </p>
-        <h1 className="mt-1 font-serif text-4xl font-black italic leading-none text-ink">
+        <h1 className="font-serif text-4xl font-black italic leading-none text-ink">
           Dopa
         </h1>
         <p className="mt-2 font-serif text-sm italic text-ink-light leading-relaxed">
-          Turn the urge to scroll into&nbsp;60&nbsp;seconds of progress.
+          Turn the urge to scroll into&nbsp;2 minutes of progress.
         </p>
       </header>
 

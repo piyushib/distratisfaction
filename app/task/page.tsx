@@ -8,7 +8,7 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { formatTime } from '@/lib/utils'
 
-const DURATION = 60
+const DURATION = 120
 
 export default function TaskPage() {
   const router = useRouter()

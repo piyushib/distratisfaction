@@ -112,7 +112,7 @@ export default function PickerPage() {
       {/* Footer note */}
       <div className="px-7 py-6">
         <p className="font-serif text-xs italic text-ink-muted leading-relaxed">
-          Each task fits in 60 seconds. You can skip anytime — no judgment.
+          Each task fits in 2 minutes. You can skip anytime — no judgment.
         </p>
       </div>
     </main>

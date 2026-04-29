@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Dopa',
-  description: 'Turn scroll urges into 60-second wins.',
+  description: 'Turn scroll urges into 2-minute wins.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

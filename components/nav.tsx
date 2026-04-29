@@ -5,9 +5,10 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const links = [
-  { href: '/', label: 'Home', icon: '◉' },
-  { href: '/log', label: 'Log', icon: '▤' },
-  { href: '/settings', label: 'Tasks', icon: '✦' },
+  { href: '/',         label: 'Home',     icon: '◉' },
+  { href: '/log',      label: 'Insights', icon: '▤' },
+  { href: '/shop',     label: 'Shop',     icon: '✦' },
+  { href: '/settings', label: 'Tasks',    icon: '⊞' },
 ]
 
 export function Nav() {

@@ -64,7 +64,7 @@ export default function LogPage() {
           your history
         </p>
         <h2 className="mt-1 font-serif text-3xl font-black italic text-ink">
-          The Log
+          Insights
         </h2>
 
         {sessions.length > 0 && (
