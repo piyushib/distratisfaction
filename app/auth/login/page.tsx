@@ -3,9 +3,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from '@/lib/auth'
+import { useStore } from '@/lib/store'
 
 export default function LoginPage() {
   const router = useRouter()
+  const hasOnboarded = useStore((s) => s.hasOnboarded)
+  const setHasSeenWelcome = useStore((s) => s.setHasSeenWelcome)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
@@ -19,7 +22,8 @@ export default function LoginPage() {
       setErrorMsg(error)
       setStatus('error')
     } else {
-      router.push('/settings')
+      setHasSeenWelcome(true)
+      router.push(hasOnboarded ? '/' : '/onboarding')
     }
   }
 

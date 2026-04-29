@@ -16,6 +16,7 @@ interface DopaState {
   _hasHydrated: boolean
   // Onboarding
   hasOnboarded: boolean
+  hasSeenWelcome: boolean
   selectedGoals: GoalId[]
   // Community pools
   addedCommunityPools: CommunityPoolId[]
@@ -31,6 +32,7 @@ interface DopaState {
   mergeSessions: (cloudSessions: Session[]) => void
 
   // Onboarding
+  setHasSeenWelcome: (v: boolean) => void
   completeOnboarding: (goals: GoalId[]) => void
   resetOnboarding: () => void
 
@@ -61,6 +63,7 @@ export const useStore = create<DopaState>()(
       pendingStartedAt: null,
       _hasHydrated: false,
       hasOnboarded: false,
+      hasSeenWelcome: false,
       selectedGoals: [],
       addedCommunityPools: [],
       user: null,
@@ -84,6 +87,8 @@ export const useStore = create<DopaState>()(
           return { sessions: [...state.sessions, ...newSessions] }
         })
       },
+
+      setHasSeenWelcome: (v) => set({ hasSeenWelcome: v }),
 
       completeOnboarding: (goals) => {
         const goalTasks = generateTasksForGoals(goals)

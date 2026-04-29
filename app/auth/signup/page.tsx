@@ -3,9 +3,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signUp } from '@/lib/auth'
+import { useStore } from '@/lib/store'
 
 export default function SignupPage() {
   const router = useRouter()
+  const hasOnboarded = useStore((s) => s.hasOnboarded)
+  const setHasSeenWelcome = useStore((s) => s.setHasSeenWelcome)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -25,7 +28,8 @@ export default function SignupPage() {
       setErrorMsg(error)
       setStatus('error')
     } else {
-      router.push('/settings')
+      setHasSeenWelcome(true)
+      router.push(hasOnboarded ? '/' : '/onboarding')
     }
   }
 

@@ -15,7 +15,7 @@ export function Nav() {
   const pathname = usePathname()
 
   // Hide nav on flow screens
-  const hidden = ['/picker', '/task', '/done'].includes(pathname)
+  const hidden = ['/picker', '/task', '/done', '/welcome', '/auth/login', '/auth/signup'].includes(pathname)
   if (hidden) return null
 
   return (

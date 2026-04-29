@@ -11,6 +11,7 @@ export default function HomePage() {
   const router = useRouter()
   const sessions = useStore((s) => s.sessions)
   const hasOnboarded = useStore((s) => s.hasOnboarded)
+  const hasSeenWelcome = useStore((s) => s.hasSeenWelcome)
   const [mounted, setMounted] = useState(false)
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [installed, setInstalled] = useState(false)
@@ -23,7 +24,7 @@ export default function HomePage() {
   useEffect(() => {
     if (!mounted) return
     if (!hasOnboarded) {
-      router.replace('/onboarding')
+      router.replace(hasSeenWelcome ? '/onboarding' : '/welcome')
       return
     }
     // Check if already running as installed PWA
