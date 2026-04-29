@@ -13,6 +13,7 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
   const [isPublic, setIsPublic] = useState(false)
   const [note, setNote] = useState('')
   const [status, setStatus] = useState<'idle' | 'submitting' | 'done' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
   async function handleSubmit() {
     if (!text.trim()) return
@@ -30,7 +31,13 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
       }),
     })
 
-    setStatus(res.ok ? 'done' : 'error')
+    if (res.ok) {
+      setStatus('done')
+    } else {
+      const data = await res.json()
+      setErrorMsg(data.error || 'Unknown error')
+      setStatus('error')
+    }
   }
 
   if (status === 'done') {
@@ -139,7 +146,7 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
 
       {status === 'error' && (
         <p className="mt-3 font-mono text-[10px] text-terra">
-          Something went wrong — try again.
+          Error: {errorMsg || 'Something went wrong'}
         </p>
       )}
 

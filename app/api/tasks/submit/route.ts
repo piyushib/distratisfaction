@@ -13,23 +13,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid category' }, { status: 400 })
   }
 
-  const { data, error } = await supabase
+  // Don't use .select().single() after insert — RLS may block the read-back
+  const { error } = await supabase
     .from('community_tasks')
     .insert({
-      text: text.trim().slice(0, 500), // cap length
+      text: text.trim().slice(0, 500),
       category,
       is_public: !!is_public,
       status: is_public ? 'pending' : 'private',
       anonymous_user_id,
       note: note?.trim().slice(0, 200) || null,
     })
-    .select()
-    .single()
 
   if (error) {
-    console.error('Supabase insert error:', error)
-    return NextResponse.json({ error: 'Failed to submit task' }, { status: 500 })
+    // Return the actual error so we can diagnose it
+    return NextResponse.json(
+      { error: error.message, code: error.code, details: error.details },
+      { status: 500 }
+    )
   }
 
-  return NextResponse.json({ task: data }, { status: 201 })
+  return NextResponse.json({ ok: true }, { status: 201 })
 }
