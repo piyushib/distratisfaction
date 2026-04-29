@@ -146,7 +146,7 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
               {isPublic
                 ? user
                   ? `Sharing as @${user.username} — visible to everyone`
-                  : 'Requires an account — you'll be prompted to sign in'
+                  : `Requires an account — you'll be prompted to sign in`
                 : 'Only added to your own task list, stays on your device'}
             </p>
           </div>
