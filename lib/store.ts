@@ -4,7 +4,7 @@ import { SEED_TASKS, generateTasksForGoals } from './seed'
 import type { GoalId } from './goals'
 import { COMMUNITY_POOLS, type CommunityPoolId } from './community'
 export type { Category, Task, Session } from './types'
-import type { Category, Task, Session } from './types'
+import type { AuthUser, Category, Task, Session } from './types'
 
 interface DopaState {
   tasks: Task[]
@@ -19,9 +19,16 @@ interface DopaState {
   selectedGoals: GoalId[]
   // Community pools
   addedCommunityPools: CommunityPoolId[]
+  // Auth
+  user: AuthUser | null
 
   // Hydration
   setHasHydrated: (v: boolean) => void
+
+  // Auth
+  setUser: (user: AuthUser | null) => void
+  mergeTasks: (cloudTasks: Task[]) => void
+  mergeSessions: (cloudSessions: Session[]) => void
 
   // Onboarding
   completeOnboarding: (goals: GoalId[]) => void
@@ -56,8 +63,27 @@ export const useStore = create<DopaState>()(
       hasOnboarded: false,
       selectedGoals: [],
       addedCommunityPools: [],
+      user: null,
 
       setHasHydrated: (v) => set({ _hasHydrated: v }),
+
+      setUser: (user) => set({ user }),
+
+      mergeTasks: (cloudTasks) => {
+        set((state) => {
+          const existingIds = new Set(state.tasks.map((t) => t.id))
+          const newTasks = cloudTasks.filter((t) => !existingIds.has(t.id))
+          return { tasks: [...state.tasks, ...newTasks] }
+        })
+      },
+
+      mergeSessions: (cloudSessions) => {
+        set((state) => {
+          const existingIds = new Set(state.sessions.map((s) => s.id))
+          const newSessions = cloudSessions.filter((s) => !existingIds.has(s.id))
+          return { sessions: [...state.sessions, ...newSessions] }
+        })
+      },
 
       completeOnboarding: (goals) => {
         const goalTasks = generateTasksForGoals(goals)

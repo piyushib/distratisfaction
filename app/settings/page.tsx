@@ -8,12 +8,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { SubmitTask } from '@/components/submit-task'
+import { signOut } from '@/lib/auth'
 
 const CATEGORIES: Category[] = ['learn', 'absorb', 'hustle', 'reset']
 
 export default function SettingsPage() {
   const router = useRouter()
-  const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals } = useStore()
+  const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals, user, setUser } = useStore()
   const [mounted, setMounted] = useState(false)
   const [showSubmit, setShowSubmit] = useState(false)
   const [activeCategory, setActiveCategory] = useState<Category>('learn')
@@ -63,8 +64,50 @@ export default function SettingsPage() {
 
   return (
     <main className="flex min-h-screen flex-col pb-24">
+      {/* Auth section */}
+      <div className="px-7 pt-10 pb-5 border-b border-ink/10">
+        {user ? (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-widest text-ink-muted">signed in as</p>
+              <p className="font-serif text-sm font-bold text-terra mt-0.5">@{user.username}</p>
+              <p className="font-mono text-[9px] text-ink-muted mt-0.5">{user.email}</p>
+            </div>
+            <button
+              onClick={async () => { await signOut(); setUser(null) }}
+              className="font-mono text-[10px] uppercase tracking-widest text-ink-muted border border-ink/20 px-3 py-1.5 hover:border-terra/50 hover:text-terra transition-colors"
+            >
+              sign out
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-widest text-ink-muted">account</p>
+              <p className="font-serif text-xs italic text-ink-light mt-0.5 leading-snug">
+                Sign in to share tasks publicly and sync across devices.
+              </p>
+            </div>
+            <div className="flex gap-2 ml-3">
+              <button
+                onClick={() => router.push('/auth/login')}
+                className="font-mono text-[10px] uppercase tracking-widest text-ink-muted border border-ink/20 px-3 py-1.5 hover:text-ink transition-colors"
+              >
+                sign in
+              </button>
+              <button
+                onClick={() => router.push('/auth/signup')}
+                className="font-mono text-[10px] uppercase tracking-widest text-parchment border-2 border-terra bg-terra px-3 py-1.5 hover:bg-terra-dark transition-colors"
+              >
+                sign up
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Header */}
-      <header className="px-7 pt-12 pb-6 border-b border-ink/10">
+      <header className="px-7 pt-8 pb-6 border-b border-ink/10">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted">
           manage
         </p>

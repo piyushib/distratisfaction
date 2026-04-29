@@ -1,13 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { CATEGORY_META } from '@/lib/store'
 import type { Category } from '@/lib/store'
 import { getUserId } from '@/lib/user-id'
+import { getAccessToken } from '@/lib/auth'
+import { useStore } from '@/lib/store'
 
 const CATEGORIES: Category[] = ['learn', 'absorb', 'hustle', 'reset']
 
 export function SubmitTask({ onClose }: { onClose: () => void }) {
+  const router = useRouter()
+  const user = useStore((s) => s.user)
   const [text, setText] = useState('')
   const [category, setCategory] = useState<Category>('learn')
   const [isPublic, setIsPublic] = useState(false)
@@ -17,11 +22,25 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
 
   async function handleSubmit() {
     if (!text.trim()) return
+
+    // Gate: public submissions require a logged-in account
+    if (isPublic && !user) {
+      router.push('/auth/login')
+      return
+    }
+
     setStatus('submitting')
+
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+
+    if (isPublic) {
+      const token = await getAccessToken()
+      if (token) headers['Authorization'] = `Bearer ${token}`
+    }
 
     const res = await fetch('/api/tasks/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         text: text.trim(),
         category,
@@ -125,7 +144,9 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
             </p>
             <p className="mt-0.5 font-serif text-xs italic text-ink-muted leading-snug">
               {isPublic
-                ? 'Visible to everyone in the community pool immediately'
+                ? user
+                  ? `Sharing as @${user.username} — visible to everyone`
+                  : 'Requires an account — you'll be prompted to sign in'
                 : 'Only added to your own task list, stays on your device'}
             </p>
           </div>
@@ -145,8 +166,8 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
       </div>
 
       {status === 'error' && (
-        <p className="mt-3 font-mono text-[10px] text-terra">
-          Error: {errorMsg || 'Something went wrong'}
+        <p className="mt-3 font-mono text-[10px] text-terra leading-relaxed">
+          {errorMsg || 'Something went wrong — try again'}
         </p>
       )}
 
@@ -155,7 +176,13 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
         disabled={!text.trim() || status === 'submitting'}
         className="mt-4 w-full border-2 border-terra bg-terra py-3 font-mono text-[10px] uppercase tracking-widest text-parchment hover:bg-terra-dark disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        {status === 'submitting' ? 'submitting…' : isPublic ? 'share with community →' : 'save privately →'}
+        {status === 'submitting'
+          ? 'submitting…'
+          : isPublic && !user
+          ? 'sign in to share publicly →'
+          : isPublic
+          ? 'share with community →'
+          : 'save privately →'}
       </button>
     </div>
   )

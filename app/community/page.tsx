@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useStore } from '@/lib/store'
+import { useStore, CATEGORY_META } from '@/lib/store'
 import { COMMUNITY_POOLS, getCurrentMonth, type CommunityPoolId } from '@/lib/community'
-import { CATEGORY_META } from '@/lib/store'
 import type { Category } from '@/lib/store'
 
-type LiveTask = { id: string; text: string; category: Category; submitted_at: string }
+type LiveTask = { id: string; text: string; category: Category; username: string | null; submitted_at: string }
 
 const CATEGORY_COLORS: Record<Category, string> = {
   learn:  'border-ink/20 bg-parchment-dark text-ink',
@@ -21,10 +20,28 @@ export default function CommunityPage() {
   const addedPools = useStore((s) => s.addedCommunityPools)
   const addCommunityPool = useStore((s) => s.addCommunityPool)
   const removeCommunityPool = useStore((s) => s.removeCommunityPool)
+  const addTask = useStore((s) => s.addTask)
+  const tasks = useStore((s) => s.tasks)
+  const [addedTaskIds, setAddedTaskIds] = useState<Set<string>>(new Set())
   const [expanded, setExpanded] = useState<CommunityPoolId | null>(null)
   const [justAdded, setJustAdded] = useState<CommunityPoolId | null>(null)
   const [liveTasks, setLiveTasks] = useState<LiveTask[]>([])
   const [liveLoading, setLiveLoading] = useState(true)
+
+  // Pre-populate which live tasks are already in the user's pool
+  useEffect(() => {
+    const existingTexts = new Set(tasks.map((t) => t.text))
+    setAddedTaskIds((prev) => {
+      const next = new Set(prev)
+      liveTasks.forEach((t) => { if (existingTexts.has(t.text)) next.add(t.id) })
+      return next
+    })
+  }, [tasks, liveTasks])
+
+  function handleAddLiveTask(task: LiveTask) {
+    addTask(task.category, task.text)
+    setAddedTaskIds((prev) => new Set(prev).add(task.id))
+  }
 
   useEffect(() => {
     fetch('/api/tasks/community')
@@ -183,19 +200,37 @@ export default function CommunityPage() {
         )}
 
         <div className="flex flex-col gap-3">
-          {liveTasks.map((task) => (
-            <div key={task.id} className="border border-ink/10 bg-parchment-light px-4 py-3">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className={`border px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-widest ${CATEGORY_COLORS[task.category]}`}>
-                  {CATEGORY_META[task.category].emoji} {CATEGORY_META[task.category].label}
-                </span>
-                <span className="font-mono text-[9px] text-ink-muted">
-                  {new Date(task.submitted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                </span>
+          {liveTasks.map((task) => {
+            const isAdded = addedTaskIds.has(task.id)
+            return (
+              <div key={task.id} className="border border-ink/10 bg-parchment-light px-4 py-3">
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`border px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-widest ${CATEGORY_COLORS[task.category]}`}>
+                      {CATEGORY_META[task.category].emoji} {CATEGORY_META[task.category].label}
+                    </span>
+                    {task.username && (
+                      <span className="font-mono text-[9px] text-terra">@{task.username}</span>
+                    )}
+                    <span className="font-mono text-[9px] text-ink-muted">
+                      {new Date(task.submitted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => !isAdded && handleAddLiveTask(task)}
+                    className={`flex-shrink-0 border px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest transition-all duration-150 ${
+                      isAdded
+                        ? 'border-ink/10 text-ink-muted cursor-default'
+                        : 'border-terra text-terra hover:bg-terra hover:text-parchment active:scale-95'
+                    }`}
+                  >
+                    {isAdded ? '✓ added' : '+ add'}
+                  </button>
+                </div>
+                <p className="font-serif text-sm text-ink leading-relaxed">{task.text}</p>
               </div>
-              <p className="font-serif text-sm text-ink leading-relaxed">{task.text}</p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 

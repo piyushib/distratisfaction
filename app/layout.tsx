@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Fraunces, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { Nav } from '@/components/nav'
+import { AuthProvider } from '@/components/auth-provider'
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -43,8 +44,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-parchment">
         {/* Constrain to mobile-first max width, centered */}
         <div className="mx-auto min-h-screen max-w-[440px] relative">
-          {children}
-          <Nav />
+          <AuthProvider>
+            {children}
+            <Nav />
+          </AuthProvider>
         </div>
       </body>
     </html>
