@@ -76,7 +76,7 @@ export default function HomePage() {
       {/* Main CTA */}
       <div className="flex flex-1 flex-col items-center justify-center px-7 py-10">
         <button
-          onClick={() => router.push('/picker')}
+          onClick={() => router.push('/feed')}
           className="group relative w-full animate-breathe rounded-none border-2 border-terra bg-terra px-8 py-9 text-left text-parchment transition-all duration-200 hover:bg-terra-dark active:scale-[0.97]"
           aria-label="I'm getting distracted — start a micro task"
         >
