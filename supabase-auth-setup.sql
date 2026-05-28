@@ -56,3 +56,26 @@ create policy "Users can manage own sessions"
 
 -- 4. Add username column to community_tasks (if it doesn't exist)
 alter table community_tasks add column if not exists username text;
+
+
+-- 5. Task completion stats (public counter per task_id)
+create table if not exists task_stats (
+  task_id text primary key,
+  completions int not null default 0
+);
+
+alter table task_stats enable row level security;
+
+create policy "public read stats"
+  on task_stats for select using (true);
+
+-- RPC to atomically increment (avoids race conditions)
+create or replace function increment_task_completion(p_task_id text)
+returns void language sql as $$
+  insert into task_stats (task_id, completions)
+  values (p_task_id, 1)
+  on conflict (task_id)
+  do update set completions = task_stats.completions + 1;
+$$;
+
+grant execute on function increment_task_completion(text) to anon, authenticated;

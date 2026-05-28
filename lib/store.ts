@@ -55,6 +55,9 @@ interface DopaState {
   addTask: (cat: Category, text: string) => void
   updateTask: (id: string, text: string) => void
   deleteTask: (id: string) => void
+
+  // Direct session logging (for inline feed flow)
+  addSessionDirect: (session: Session) => void
 }
 
 export const useStore = create<DopaState>()(
@@ -191,6 +194,9 @@ export const useStore = create<DopaState>()(
 
       deleteTask: (id) =>
         set((state) => ({ tasks: state.tasks.filter((t) => t.id !== id) })),
+
+      addSessionDirect: (session) =>
+        set((state) => ({ sessions: [session, ...state.sessions] })),
     }),
     {
       name: 'dopa-v1',
