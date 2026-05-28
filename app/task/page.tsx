@@ -8,8 +8,6 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { formatTime } from '@/lib/utils'
 
-const DURATION = 120
-
 export default function TaskPage() {
   const router = useRouter()
   const {
@@ -21,7 +19,8 @@ export default function TaskPage() {
     clearPending,
   } = useStore()
 
-  const [timeLeft, setTimeLeft] = useState(DURATION)
+  const [duration, setDuration] = useState(120)
+  const [timeLeft, setTimeLeft] = useState(120)
   const [running, setRunning] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -40,11 +39,10 @@ export default function TaskPage() {
       return
     }
 
-    // Pick a task if one isn't already chosen (fresh navigation)
-    if (!pendingTask) {
-      const task = getRandomTask(tasks, pendingCategory)
+    let task = pendingTask
+    if (!task) {
+      task = getRandomTask(tasks, pendingCategory)
       if (!task) {
-        // No tasks in pool — send to settings
         router.replace('/settings')
         return
       }
@@ -52,6 +50,9 @@ export default function TaskPage() {
       setPendingStartedAt(Date.now())
     }
 
+    const d = task.duration ?? 120
+    setDuration(d)
+    setTimeLeft(d)
     setRunning(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted])
@@ -91,7 +92,7 @@ export default function TaskPage() {
 
   const meta = CATEGORY_META[pendingTask.category]
   const appLinks = CATEGORY_APP_LINKS[pendingTask.category]
-  const progress = ((DURATION - timeLeft) / DURATION) * 100
+  const progress = ((duration - timeLeft) / duration) * 100
   const isLast15 = timeLeft <= 15
   const isAbsorb = pendingTask.category === 'absorb'
 
@@ -188,7 +189,7 @@ export default function TaskPage() {
               strokeWidth="4"
               strokeLinecap="round"
               strokeDasharray={`${2 * Math.PI * 50}`}
-              strokeDashoffset={`${2 * Math.PI * 50 * (timeLeft / DURATION)}`}
+              strokeDashoffset={`${2 * Math.PI * 50 * (timeLeft / duration)}`}
               style={{ transition: 'stroke-dashoffset 1s linear' }}
             />
           </svg>

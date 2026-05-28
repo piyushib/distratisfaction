@@ -11,6 +11,7 @@ export type Task = {
   category: Category
   text: string
   createdAt: number
+  duration?: number  // seconds — defaults to 120 if unset
 }
 
 export type Session = {

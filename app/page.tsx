@@ -12,6 +12,7 @@ export default function HomePage() {
   const sessions = useStore((s) => s.sessions)
   const hasOnboarded = useStore((s) => s.hasOnboarded)
   const hasSeenWelcome = useStore((s) => s.hasSeenWelcome)
+  const user = useStore((s) => s.user)
   const [mounted, setMounted] = useState(false)
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [installed, setInstalled] = useState(false)
@@ -25,6 +26,11 @@ export default function HomePage() {
     if (!mounted) return
     if (!hasOnboarded) {
       router.replace(hasSeenWelcome ? '/onboarding' : '/welcome')
+      return
+    }
+    // Logged-in users skip home and go straight to the feed
+    if (user) {
+      router.replace('/feed')
       return
     }
     // Check if already running as installed PWA

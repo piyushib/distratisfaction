@@ -14,7 +14,7 @@ const CATEGORIES: Category[] = ['learn', 'absorb', 'hustle', 'reset']
 
 export default function SettingsPage() {
   const router = useRouter()
-  const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals, user, setUser } = useStore()
+  const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals, user, setUser, enabledCategories, toggleCategory } = useStore()
   const [mounted, setMounted] = useState(false)
   const [showSubmit, setShowSubmit] = useState(false)
   const [activeCategory, setActiveCategory] = useState<Category>('learn')
@@ -104,6 +104,39 @@ export default function SettingsPage() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Feed filter — category toggles */}
+      <div className="px-7 pt-6 pb-6 border-b border-ink/10">
+        <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted mb-1">feed</p>
+        <p className="font-serif text-sm font-bold text-ink mt-0.5 mb-4">Task types in your feed</p>
+        <div className="grid grid-cols-2 gap-2">
+          {(Object.entries(CATEGORY_META) as [Category, typeof CATEGORY_META[Category]][]).map(([cat, meta]) => {
+            const on = enabledCategories.includes(cat)
+            return (
+              <button
+                key={cat}
+                onClick={() => toggleCategory(cat)}
+                className={`flex items-center justify-between border px-3 py-3 transition-colors ${
+                  on
+                    ? 'border-terra bg-terra/10 text-ink'
+                    : 'border-ink/10 bg-parchment-light text-ink-muted'
+                }`}
+              >
+                <span className="flex items-center gap-2 font-serif text-sm font-medium">
+                  <span>{meta.emoji}</span>
+                  <span>{meta.label}</span>
+                </span>
+                <span className={`font-mono text-[9px] uppercase tracking-widest ${on ? 'text-terra' : 'text-ink-muted/40'}`}>
+                  {on ? 'on' : 'off'}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+        <p className="mt-3 font-serif text-xs italic text-ink-muted">
+          At least one must stay on. Changes take effect on next feed load.
+        </p>
       </div>
 
       {/* Header */}

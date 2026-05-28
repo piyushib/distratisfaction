@@ -22,6 +22,8 @@ interface DopaState {
   addedCommunityPools: CommunityPoolId[]
   // Auth
   user: AuthUser | null
+  // Feed filter
+  enabledCategories: Category[]
 
   // Hydration
   setHasHydrated: (v: boolean) => void
@@ -30,6 +32,8 @@ interface DopaState {
   setUser: (user: AuthUser | null) => void
   mergeTasks: (cloudTasks: Task[]) => void
   mergeSessions: (cloudSessions: Session[]) => void
+  // Feed filter
+  toggleCategory: (cat: Category) => void
 
   // Onboarding
   setHasSeenWelcome: (v: boolean) => void
@@ -67,6 +71,7 @@ export const useStore = create<DopaState>()(
       selectedGoals: [],
       addedCommunityPools: [],
       user: null,
+      enabledCategories: ['learn', 'absorb', 'hustle', 'reset'],
 
       setHasHydrated: (v) => set({ _hasHydrated: v }),
 
@@ -89,6 +94,17 @@ export const useStore = create<DopaState>()(
       },
 
       setHasSeenWelcome: (v) => set({ hasSeenWelcome: v }),
+
+      toggleCategory: (cat) =>
+        set((state) => {
+          const enabled = state.enabledCategories
+          if (enabled.includes(cat)) {
+            // Don't allow disabling the last one
+            if (enabled.length === 1) return {}
+            return { enabledCategories: enabled.filter((c) => c !== cat) }
+          }
+          return { enabledCategories: [...enabled, cat] }
+        }),
 
       completeOnboarding: (goals) => {
         const goalTasks = generateTasksForGoals(goals)
