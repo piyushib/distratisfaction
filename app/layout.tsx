@@ -1,19 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { Fraunces, JetBrains_Mono } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Nav } from '@/components/nav'
 import { AuthProvider } from '@/components/auth-provider'
 
-const fraunces = Fraunces({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-fraunces',
-  axes: ['SOFT', 'WONK', 'opsz'],
-  display: 'swap',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains',
+  variable: '--font-inter',
   display: 'swap',
 })
 
@@ -40,9 +33,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body className="min-h-screen bg-parchment">
-        {/* Constrain to mobile-first max width, centered */}
         <div className="mx-auto min-h-screen max-w-[440px] relative">
           <AuthProvider>
             {children}
