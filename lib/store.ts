@@ -22,6 +22,8 @@ interface DopaState {
   addedCommunityPools: CommunityPoolId[]
   // Auth
   user: AuthUser | null
+  authReady: boolean
+  stayLoggedIn: boolean
   // Feed filter
   enabledCategories: Category[]
 
@@ -30,6 +32,8 @@ interface DopaState {
 
   // Auth
   setUser: (user: AuthUser | null) => void
+  setAuthReady: (v: boolean) => void
+  setStayLoggedIn: (v: boolean) => void
   mergeTasks: (cloudTasks: Task[]) => void
   mergeSessions: (cloudSessions: Session[]) => void
   // Feed filter
@@ -74,11 +78,15 @@ export const useStore = create<DopaState>()(
       selectedGoals: [],
       addedCommunityPools: [],
       user: null,
+      authReady: false,
+      stayLoggedIn: false,
       enabledCategories: ['learn', 'absorb', 'hustle', 'reset'],
 
       setHasHydrated: (v) => set({ _hasHydrated: v }),
 
       setUser: (user) => set({ user }),
+      setAuthReady: (v) => set({ authReady: v }),
+      setStayLoggedIn: (v) => set({ stayLoggedIn: v }),
 
       mergeTasks: (cloudTasks) => {
         set((state) => {

@@ -9,6 +9,7 @@ export default function SignupPage() {
   const router = useRouter()
   const hasOnboarded = useStore((s) => s.hasOnboarded)
   const setHasSeenWelcome = useStore((s) => s.setHasSeenWelcome)
+  const setStayLoggedIn = useStore((s) => s.setStayLoggedIn)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -28,8 +29,9 @@ export default function SignupPage() {
       setErrorMsg(error)
       setStatus('error')
     } else {
+      setStayLoggedIn(true)
       setHasSeenWelcome(true)
-      router.push(hasOnboarded ? '/' : '/onboarding')
+      router.push(hasOnboarded ? '/feed' : '/onboarding')
     }
   }
 

@@ -14,7 +14,7 @@ const CATEGORIES: Category[] = ['learn', 'absorb', 'hustle', 'reset']
 
 export default function SettingsPage() {
   const router = useRouter()
-  const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals, user, setUser, enabledCategories, toggleCategory } = useStore()
+  const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals, user, setUser, setStayLoggedIn, enabledCategories, toggleCategory } = useStore()
   const [mounted, setMounted] = useState(false)
   const [showSubmit, setShowSubmit] = useState(false)
   const [activeCategory, setActiveCategory] = useState<Category>('learn')
@@ -74,7 +74,7 @@ export default function SettingsPage() {
               <p className="font-mono text-[9px] text-ink-muted mt-0.5">{user.email}</p>
             </div>
             <button
-              onClick={async () => { await signOut(); setUser(null) }}
+              onClick={async () => { await signOut(); setUser(null); setStayLoggedIn(false) }}
               className="font-mono text-[10px] uppercase tracking-widest text-ink-muted border border-ink/20 px-3 py-1.5 hover:border-terra/50 hover:text-terra transition-colors"
             >
               sign out
