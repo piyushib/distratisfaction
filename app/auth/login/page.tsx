@@ -1,14 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from '@/lib/auth'
 import { useStore } from '@/lib/store'
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: string }>
-}
 
 export default function LoginPage() {
   const router = useRouter()
@@ -21,33 +16,6 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(true)
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
-
-  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
-  const [isInstalled, setIsInstalled] = useState(false)
-  const [isIOS, setIsIOS] = useState(false)
-  const [showIOSHint, setShowIOSHint] = useState(false)
-
-  useEffect(() => {
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true)
-      return
-    }
-    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent)
-    setIsIOS(ios)
-    const handler = (e: Event) => { e.preventDefault(); setInstallPrompt(e as BeforeInstallPromptEvent) }
-    window.addEventListener('beforeinstallprompt', handler)
-    window.addEventListener('appinstalled', () => setIsInstalled(true))
-    return () => window.removeEventListener('beforeinstallprompt', handler)
-  }, [])
-
-  async function handleInstall() {
-    if (isIOS) { setShowIOSHint((v) => !v); return }
-    if (!installPrompt) return
-    await installPrompt.prompt()
-    const { outcome } = await installPrompt.userChoice
-    if (outcome === 'accepted') setIsInstalled(true)
-    setInstallPrompt(null)
-  }
 
   async function handleLogin() {
     if (!email || !password) return
@@ -69,8 +37,6 @@ export default function LoginPage() {
     router.push(hasOnboarded ? '/feed' : '/onboarding')
   }
 
-  const showInstall = !isInstalled && (installPrompt || isIOS)
-
   return (
     <main className="flex min-h-screen flex-col px-7 pt-14 pb-10">
       {/* Brand */}
@@ -79,48 +45,9 @@ export default function LoginPage() {
         <p className="mt-3 font-serif text-sm italic text-ink-light leading-relaxed">
           Turn the urge to scroll into 2 minutes of real progress.
         </p>
-
-        {/* Install button */}
-        {showInstall && (
-          <div className="mt-5">
-            <button
-              onClick={handleInstall}
-              className="flex items-center gap-3 border border-terra/40 bg-terra/10 px-4 py-3 w-full hover:bg-terra/20 transition-colors"
-            >
-              <span className="text-lg">📲</span>
-              <div className="text-left">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-terra">
-                  {isIOS ? 'Add to Home Screen' : 'Install App'}
-                </p>
-                <p className="font-serif text-xs italic text-ink-muted mt-0.5">
-                  {isIOS ? 'Tap for instructions' : 'Runs like a native app'}
-                </p>
-              </div>
-              <span className="ml-auto font-mono text-[10px] text-terra">↓</span>
-            </button>
-            {isIOS && showIOSHint && (
-              <div className="border border-terra/30 bg-terra/5 px-4 py-4 mt-px">
-                <p className="font-mono text-[9px] uppercase tracking-widest text-ink-muted mb-3">how to install on iPhone</p>
-                <ol className="space-y-2">
-                  {[
-                    { icon: '⬆️', text: 'Tap the Share button at the bottom of Safari' },
-                    { icon: '📋', text: 'Tap "Add to Home Screen"' },
-                    { icon: '✅', text: 'Tap "Add"' },
-                  ].map((s, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className="text-base leading-none mt-0.5">{s.icon}</span>
-                      <p className="font-serif text-sm text-ink-light leading-snug">{s.text}</p>
-                    </li>
-                  ))}
-                </ol>
-                <p className="mt-3 font-serif text-xs italic text-ink-muted">Must use Safari on iOS.</p>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
-      <div className="w-8 h-px bg-terra/50 mb-8" />
+      <div className="w-8 h-px bg-terra/50 mb-8 mx-auto" />
 
       {/* Login form */}
       <div className="flex flex-col gap-4">
