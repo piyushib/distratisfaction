@@ -74,7 +74,7 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col px-7 pt-14 pb-10">
       {/* Brand */}
-      <div className="mb-8">
+      <div className="mb-8 text-center">
         <h1 className="font-serif text-5xl font-black italic leading-none text-ink">Dopa</h1>
         <p className="mt-3 font-serif text-sm italic text-ink-light leading-relaxed">
           Turn the urge to scroll into 2 minutes of real progress.
