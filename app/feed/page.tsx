@@ -134,10 +134,9 @@ export default function FeedPage() {
   // Fetch completion stats
   useEffect(() => {
     if (!mounted) return
-    fetch('/api/tasks/stats')
-      .then((r) => r.json())
-      .then((data) => { if (data.stats) setStats(data.stats) })
-      .catch(() => {})
+    import('@/lib/supabase-queries').then(({ fetchTaskStats }) =>
+      fetchTaskStats().then(setStats).catch(() => {})
+    )
   }, [mounted])
 
   // Track visible card via IntersectionObserver
@@ -196,13 +195,10 @@ export default function FeedPage() {
     // Add time to productivity bank
     addProductivitySeconds(task.duration ?? 120)
     // Increment community counter
-    fetch('/api/tasks/stats', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ task_id: task.id }),
-    }).then(() => {
+    import('@/lib/supabase-queries').then(({ incrementTaskCompletion }) => {
+      incrementTaskCompletion(task.id).catch(() => {})
       setStats((prev) => ({ ...prev, [task.id]: (prev[task.id] ?? 0) + 1 }))
-    }).catch(() => {})
+    })
 
     setExpiredIndex(null)
     scrollToNext(i)

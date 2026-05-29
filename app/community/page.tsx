@@ -44,11 +44,12 @@ export default function CommunityPage() {
   }
 
   useEffect(() => {
-    fetch('/api/tasks/community')
-      .then((r) => r.json())
-      .then((d) => setLiveTasks(d.tasks ?? []))
-      .catch(() => {})
-      .finally(() => setLiveLoading(false))
+    import('@/lib/supabase-queries').then(({ fetchCommunityTasks }) =>
+      fetchCommunityTasks()
+        .then((tasks) => setLiveTasks(tasks))
+        .catch(() => {})
+        .finally(() => setLiveLoading(false))
+    )
   }, [])
 
   function handleTogglePool(poolId: CommunityPoolId) {

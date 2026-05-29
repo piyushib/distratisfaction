@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { CATEGORY_META } from '@/lib/store'
 import type { Category } from '@/lib/store'
 import { getUserId } from '@/lib/user-id'
-import { getAccessToken } from '@/lib/auth'
+import { submitTask } from '@/lib/supabase-queries'
 import { useStore } from '@/lib/store'
 
 const CATEGORIES: Category[] = ['learn', 'absorb', 'hustle', 'reset']
@@ -31,30 +31,19 @@ export function SubmitTask({ onClose }: { onClose: () => void }) {
 
     setStatus('submitting')
 
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-
-    if (isPublic) {
-      const token = await getAccessToken()
-      if (token) headers['Authorization'] = `Bearer ${token}`
-    }
-
-    const res = await fetch('/api/tasks/submit', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        text: text.trim(),
-        category,
-        is_public: isPublic,
-        anonymous_user_id: getUserId(),
-        note: note.trim() || null,
-      }),
+    const result = await submitTask({
+      text: text.trim(),
+      category,
+      isPublic,
+      anonymousUserId: getUserId(),
+      note: note.trim() || undefined,
+      username: user?.username,
     })
 
-    if (res.ok) {
+    if (result.ok) {
       setStatus('done')
     } else {
-      const data = await res.json()
-      setErrorMsg(data.error || 'Unknown error')
+      setErrorMsg(result.error || 'Unknown error')
       setStatus('error')
     }
   }
