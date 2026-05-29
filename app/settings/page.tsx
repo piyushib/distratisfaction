@@ -1,391 +1,83 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useStore, CATEGORY_META } from '@/lib/store'
-import type { Category, Task } from '@/lib/store'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
-import { SubmitTask } from '@/components/submit-task'
+import { useStore } from '@/lib/store'
 import { signOut } from '@/lib/auth'
-
-const CATEGORIES: Category[] = ['learn', 'absorb', 'hustle', 'reset']
 
 export default function SettingsPage() {
   const router = useRouter()
-  const { tasks, addTask, updateTask, deleteTask, resetOnboarding, selectedGoals, user, setUser, setStayLoggedIn, enabledCategories, toggleCategory } = useStore()
-  const [mounted, setMounted] = useState(false)
-  const [showSubmit, setShowSubmit] = useState(false)
-  const [activeCategory, setActiveCategory] = useState<Category>('learn')
-  const [newTaskText, setNewTaskText] = useState('')
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editText, setEditText] = useState('')
+  const user = useStore((s) => s.user)
+  const setUser = useStore((s) => s.setUser)
+  const setStayLoggedIn = useStore((s) => s.setStayLoggedIn)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <span className="font-mono text-xs text-ink-muted tracking-widest uppercase">loading…</span>
-      </div>
-    )
-  }
-
-  const activeTasks = tasks.filter((t) => t.category === activeCategory)
-  const meta = CATEGORY_META[activeCategory]
-
-  function handleAdd() {
-    const text = newTaskText.trim()
-    if (!text) return
-    addTask(activeCategory, text)
-    setNewTaskText('')
-  }
-
-  function startEdit(task: Task) {
-    setEditingId(task.id)
-    setEditText(task.text)
-  }
-
-  function commitEdit(id: string) {
-    const text = editText.trim()
-    if (!text) return
-    updateTask(id, text)
-    setEditingId(null)
-    setEditText('')
-  }
-
-  function cancelEdit() {
-    setEditingId(null)
-    setEditText('')
-  }
+  const menuItems = [
+    {
+      icon: '👤',
+      label: 'Edit Profile',
+      description: user ? `Signed in as @${user.username}` : 'Sign in or create account',
+      href: '/settings/profile',
+    },
+    {
+      icon: '📚',
+      label: 'Edit Task Library',
+      description: 'Add, edit, or remove tasks from your pool',
+      href: '/settings/library',
+    },
+    {
+      icon: '⊞',
+      label: 'Edit Task Types',
+      description: 'Choose which categories appear in your feed',
+      href: '/settings/types',
+    },
+  ]
 
   return (
     <main className="flex min-h-screen flex-col pb-24">
-      {/* Auth section */}
-      <div className="px-7 pt-10 pb-5 border-b border-ink/10">
-        {user ? (
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-mono text-[9px] uppercase tracking-widest text-ink-muted">signed in as</p>
-              <p className="font-serif text-sm font-bold text-terra mt-0.5">@{user.username}</p>
-              <p className="font-mono text-[9px] text-ink-muted mt-0.5">{user.email}</p>
-            </div>
-            <button
-              onClick={async () => { await signOut(); setUser(null); setStayLoggedIn(false) }}
-              className="font-mono text-[10px] uppercase tracking-widest text-ink-muted border border-ink/20 px-3 py-1.5 hover:border-terra/50 hover:text-terra transition-colors"
-            >
-              sign out
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-mono text-[9px] uppercase tracking-widest text-ink-muted">account</p>
-              <p className="font-serif text-xs italic text-ink-light mt-0.5 leading-snug">
-                Sign in to share tasks publicly and sync across devices.
-              </p>
-            </div>
-            <div className="flex gap-2 ml-3">
-              <button
-                onClick={() => router.push('/auth/login')}
-                className="font-mono text-[10px] uppercase tracking-widest text-ink-muted border border-ink/20 px-3 py-1.5 hover:text-ink transition-colors"
-              >
-                sign in
-              </button>
-              <button
-                onClick={() => router.push('/auth/signup')}
-                className="font-mono text-[10px] uppercase tracking-widest text-parchment border-2 border-terra bg-terra px-3 py-1.5 hover:bg-terra-dark transition-colors"
-              >
-                sign up
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Feed filter — category toggles */}
-      <div className="px-7 pt-6 pb-6 border-b border-ink/10">
-        <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted mb-1">feed</p>
-        <p className="font-serif text-sm font-bold text-ink mt-0.5 mb-4">Task types in your feed</p>
-        <div className="grid grid-cols-2 gap-2">
-          {(Object.entries(CATEGORY_META) as [Category, typeof CATEGORY_META[Category]][]).map(([cat, meta]) => {
-            const on = enabledCategories.includes(cat)
-            return (
-              <button
-                key={cat}
-                onClick={() => toggleCategory(cat)}
-                className={`flex items-center justify-between border px-3 py-3 transition-colors ${
-                  on
-                    ? 'border-terra bg-terra/10 text-ink'
-                    : 'border-ink/10 bg-parchment-light text-ink-muted'
-                }`}
-              >
-                <span className="flex items-center gap-2 font-serif text-sm font-medium">
-                  <span>{meta.emoji}</span>
-                  <span>{meta.label}</span>
-                </span>
-                <span className={`font-mono text-[9px] uppercase tracking-widest ${on ? 'text-terra' : 'text-ink-muted/40'}`}>
-                  {on ? 'on' : 'off'}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-        <p className="mt-3 font-serif text-xs italic text-ink-muted">
-          At least one must stay on. Changes take effect on next feed load.
-        </p>
-      </div>
-
-      {/* Header */}
-      <header className="px-7 pt-8 pb-6 border-b border-ink/10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted">
-          manage
-        </p>
-        <h2 className="mt-1 font-serif text-3xl font-black italic text-ink">
-          Task Pools
-        </h2>
-        <p className="mt-2 font-serif text-xs italic text-ink-light leading-relaxed">
-          These are the tasks Dopa draws from. Keep them tight — 2 minutes max.
-        </p>
-        {/* Goals summary + re-onboard link */}
-        <div className="mt-4 flex items-center justify-between border border-ink/10 bg-parchment px-3 py-2">
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-ink-muted">your goals</p>
-            <p className="mt-0.5 font-serif text-xs text-ink">
-              {selectedGoals.length > 0
-                ? selectedGoals.join(', ')
-                : 'none set'}
-            </p>
-          </div>
-          <button
-            onClick={() => { resetOnboarding(); router.push('/onboarding') }}
-            className="font-mono text-[10px] uppercase tracking-widest text-terra underline underline-offset-2 hover:text-terra-dark transition-colors"
-          >
-            update
-          </button>
-        </div>
+      <header className="px-6 pt-12 pb-6">
+        <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted">app</p>
+        <h1 className="mt-1 font-sans text-3xl font-black text-ink">Settings</h1>
       </header>
 
-      {/* Category tabs */}
-      <div className="flex border-b border-ink/10">
-        {CATEGORIES.map((cat) => {
-          const m = CATEGORY_META[cat]
-          const count = tasks.filter((t) => t.category === cat).length
-          return (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={cn(
-                'flex-1 flex flex-col items-center py-4 gap-0.5 transition-colors border-b-2',
-                activeCategory === cat
-                  ? 'border-terra text-ink'
-                  : 'border-transparent text-ink-muted hover:text-ink'
-              )}
-            >
-              <span className="text-xl leading-none">{m.emoji}</span>
-              <span className="font-serif text-xs font-semibold">{m.label}</span>
-              <span className="font-mono text-[9px] text-ink-muted">{count}</span>
-            </button>
-          )
-        })}
+      <div className="flex flex-col gap-px bg-ink/5 border-y border-ink/10">
+        {menuItems.map((item) => (
+          <button
+            key={item.href}
+            onClick={() => router.push(item.href)}
+            className="flex items-center gap-4 bg-parchment px-6 py-5 text-left hover:bg-parchment-light transition-colors active:scale-[0.99]"
+          >
+            <span className="text-2xl leading-none w-8 text-center">{item.icon}</span>
+            <div className="flex-1">
+              <p className="font-sans text-sm font-semibold text-ink">{item.label}</p>
+              <p className="font-mono text-[10px] text-ink-muted mt-0.5">{item.description}</p>
+            </div>
+            <span className="font-mono text-ink-muted text-sm">→</span>
+          </button>
+        ))}
       </div>
 
-      {/* Task list */}
-      <div className="flex-1 px-7 pt-6">
-        <div className="flex items-center justify-between mb-4">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted">
-            {meta.emoji} {meta.label} tasks — {activeTasks.length}
-          </p>
-        </div>
-
-        {activeTasks.length === 0 ? (
-          <p className="font-serif text-sm italic text-ink-muted py-4">
-            No tasks yet. Add one below.
-          </p>
+      {/* Sign out / sign in */}
+      <div className="px-6 mt-8">
+        {user ? (
+          <button
+            onClick={async () => {
+              await signOut()
+              setUser(null)
+              setStayLoggedIn(false)
+              router.push('/auth/login')
+            }}
+            className="w-full border border-ink/20 py-3 font-mono text-[10px] uppercase tracking-widest text-ink-muted hover:border-terra/40 hover:text-terra transition-colors"
+          >
+            sign out
+          </button>
         ) : (
-          <div className="space-y-px border border-ink/10 bg-ink/10">
-            {activeTasks.map((task) => (
-              <TaskRow
-                key={task.id}
-                task={task}
-                editing={editingId === task.id}
-                editText={editText}
-                onEdit={() => startEdit(task)}
-                onEditChange={setEditText}
-                onEditCommit={() => commitEdit(task.id)}
-                onEditCancel={cancelEdit}
-                onDelete={() => deleteTask(task.id)}
-              />
-            ))}
-          </div>
+          <button
+            onClick={() => router.push('/auth/login')}
+            className="w-full border-2 border-terra bg-terra py-3 font-mono text-[10px] uppercase tracking-widest text-parchment hover:bg-terra-dark transition-colors"
+          >
+            sign in / create account
+          </button>
         )}
-
-        {/* Add new task */}
-        <div className="mt-6">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted mb-2">
-            add a task
-          </p>
-          <div className="flex gap-2">
-            <Input
-              value={newTaskText}
-              onChange={(e) => setNewTaskText(e.target.value)}
-              placeholder="Describe something doable in 60s…"
-              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-              className="flex-1"
-            />
-            <Button
-              variant="terra"
-              size="default"
-              onClick={handleAdd}
-              disabled={!newTaskText.trim()}
-            >
-              add
-            </Button>
-          </div>
-          <p className="mt-1.5 font-serif text-[11px] italic text-ink-muted">
-            Tip: start with a verb. "Write", "Read", "Name", "Look up"…
-          </p>
-        </div>
-      </div>
-
-      {/* Share a task with the community */}
-      <div className="px-7 pt-8 border-t border-ink/10 mt-6">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted">community</p>
-            <p className="font-serif text-sm font-bold text-ink mt-0.5">Share a task</p>
-            <p className="font-serif text-xs italic text-ink-muted leading-snug mt-0.5">
-              Submit a task privately or to the community pool.
-            </p>
-          </div>
-          {!showSubmit && (
-            <button
-              onClick={() => setShowSubmit(true)}
-              className="flex-shrink-0 border-2 border-terra bg-terra px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-parchment hover:bg-terra-dark transition-colors"
-            >
-              + share
-            </button>
-          )}
-        </div>
-        {showSubmit && <SubmitTask onClose={() => setShowSubmit(false)} />}
-      </div>
-
-      {/* Reset to defaults */}
-      <div className="px-7 pt-8 pb-4 border-t border-ink/10 mt-6">
-        <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-muted mb-1">
-          danger zone
-        </p>
-        <ResetSection />
       </div>
     </main>
-  )
-}
-
-function TaskRow({
-  task,
-  editing,
-  editText,
-  onEdit,
-  onEditChange,
-  onEditCommit,
-  onEditCancel,
-  onDelete,
-}: {
-  task: Task
-  editing: boolean
-  editText: string
-  onEdit: () => void
-  onEditChange: (v: string) => void
-  onEditCommit: () => void
-  onEditCancel: () => void
-  onDelete: () => void
-}) {
-  if (editing) {
-    return (
-      <div className="bg-parchment-light px-4 py-3 space-y-2">
-        <Input
-          value={editText}
-          onChange={(e) => onEditChange(e.target.value)}
-          autoFocus
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') onEditCommit()
-            if (e.key === 'Escape') onEditCancel()
-          }}
-        />
-        <div className="flex gap-2">
-          <Button variant="sage" size="sm" onClick={onEditCommit}>
-            save
-          </Button>
-          <Button variant="ghost" size="sm" onClick={onEditCancel}>
-            cancel
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="group flex items-start gap-3 bg-parchment px-4 py-4">
-      <p className="flex-1 font-serif text-sm text-ink leading-snug">{task.text}</p>
-      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-        <button
-          onClick={onEdit}
-          className="font-mono text-[9px] uppercase tracking-widest text-ink-muted hover:text-ink px-2 py-1 transition-colors"
-        >
-          edit
-        </button>
-        <button
-          onClick={onDelete}
-          className="font-mono text-[9px] uppercase tracking-widest text-ink-muted hover:text-terra px-2 py-1 transition-colors"
-        >
-          del
-        </button>
-      </div>
-    </div>
-  )
-}
-
-function ResetSection() {
-  const { tasks, addTask } = useStore()
-  const [confirmed, setConfirmed] = useState(false)
-
-  // Lazy import of seed to avoid circular deps at module level
-  async function handleReset() {
-    if (!confirmed) {
-      setConfirmed(true)
-      return
-    }
-    const { SEED_TASKS } = await import('@/lib/seed')
-    // Add any seed tasks that don't already exist by id
-    for (const t of SEED_TASKS) {
-      if (!tasks.find((existing) => existing.id === t.id)) {
-        addTask(t.category, t.text)
-      }
-    }
-    setConfirmed(false)
-  }
-
-  return (
-    <div className="flex items-center gap-4">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleReset}
-        className={confirmed ? 'border-terra text-terra' : ''}
-      >
-        {confirmed ? 'confirm restore defaults?' : 'restore default tasks'}
-      </Button>
-      {confirmed && (
-        <button
-          onClick={() => setConfirmed(false)}
-          className="font-mono text-[9px] uppercase tracking-widest text-ink-muted hover:text-ink"
-        >
-          cancel
-        </button>
-      )}
-    </div>
   )
 }

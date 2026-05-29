@@ -8,7 +8,7 @@ const links = [
   { href: '/feed',     label: 'Home',     icon: '◉' },
   { href: '/log',      label: 'Insights', icon: '▤' },
   { href: '/rewards',  label: 'Rewards',  icon: '✦' },
-  { href: '/settings', label: 'Tasks',    icon: '⊞' },
+  { href: '/settings', label: 'Settings',  icon: '⊞' },
 ]
 
 export function Nav() {
