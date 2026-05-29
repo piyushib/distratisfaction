@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useStore, CATEGORY_META } from '@/lib/store'
 import type { Category, Task, Session } from '@/lib/store'
@@ -99,6 +99,8 @@ export default function FeedPage() {
   const tasks = useStore((s) => s.tasks)
   const enabledCategories = useStore((s) => s.enabledCategories)
   const addSessionDirect = useStore((s) => s.addSessionDirect)
+  const addProductivitySeconds = useStore((s) => s.addProductivitySeconds)
+  const productivitySeconds = useStore((s) => s.productivitySeconds)
 
   const [mounted, setMounted] = useState(false)
   const [deck, setDeck] = useState<Task[]>([])
@@ -191,6 +193,8 @@ export default function FeedPage() {
       endedAt: Date.now(),
     }
     addSessionDirect(session)
+    // Add time to productivity bank
+    addProductivitySeconds(task.duration ?? 120)
     // Increment community counter
     fetch('/api/tasks/stats', {
       method: 'POST',
@@ -220,21 +224,33 @@ export default function FeedPage() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-parchment">
-      {/* Back */}
-      <button
-        onClick={() => router.push('/')}
-        className="absolute top-10 left-7 z-50 font-mono text-[10px] uppercase tracking-widest text-ink-muted/60 hover:text-ink transition-colors"
-      >
-        ← home
-      </button>
-
-      {/* Filter shortcut */}
-      <button
-        onClick={() => router.push('/settings')}
-        className="absolute top-10 right-7 z-50 font-mono text-[10px] uppercase tracking-widest text-ink-muted/60 hover:text-ink transition-colors"
-      >
-        filter ⊞
-      </button>
+      {/* Bottom taskbar */}
+      <nav className="absolute bottom-0 left-0 right-0 z-50 flex border-t border-ink/10 bg-parchment/95 backdrop-blur-sm">
+        <button
+          onClick={() => router.push('/feed')}
+          className="flex flex-1 flex-col items-center gap-1 py-3 text-terra"
+        >
+          <span className="text-lg leading-none">◉</span>
+          <span className="font-mono text-[9px] uppercase tracking-widest">Home</span>
+        </button>
+        <button
+          onClick={() => router.push('/settings')}
+          className="flex flex-1 flex-col items-center gap-1 py-3 text-ink-muted hover:text-ink transition-colors"
+        >
+          <span className="text-lg leading-none">⊞</span>
+          <span className="font-mono text-[9px] uppercase tracking-widest">Settings</span>
+        </button>
+        <button
+          onClick={() => router.push('/rewards')}
+          className="flex flex-1 flex-col items-center gap-1 py-3 text-ink-muted hover:text-ink transition-colors relative"
+        >
+          <span className="text-lg leading-none">✦</span>
+          <span className="font-mono text-[9px] uppercase tracking-widest">Rewards</span>
+          {productivitySeconds > 0 && (
+            <span className="absolute top-2 right-[calc(50%-14px)] w-1.5 h-1.5 rounded-full bg-terra" />
+          )}
+        </button>
+      </nav>
 
       {/* Scroll container */}
       <div
@@ -285,7 +301,7 @@ export default function FeedPage() {
               </div>
 
               {/* Bottom bar */}
-              <div className="px-7 pb-24">
+              <div className="px-7 pb-20">
                 {isExpired ? (
                   /* Done / Skip prompt */
                   <div className="flex items-center gap-3 animate-fade-in">

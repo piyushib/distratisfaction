@@ -23,20 +23,20 @@ export function generateTasksForGoals(goals: GoalId[]): Task[] {
 }
 
 export const SEED_TASKS: Task[] = [
-  // ── Learn ──────────────────────────────────────────────────────
+  // ── Learn (30s – 2min) ────────────────────────────────────────
   {
     id: 'learn-1',
     category: 'learn',
-    text: 'Pick one word from your environment and look up its etymology on Etymonline. Surprise yourself.',
+    text: 'Pick one word from your environment and look up its etymology. Surprise yourself.',
     createdAt: 0,
     duration: 90,
   },
   {
     id: 'learn-2',
     category: 'learn',
-    text: 'Open Wikipedia to a random article. Read the first two paragraphs only — absorb one interesting fact.',
+    text: 'Open Wikipedia to a random article. Read the first two paragraphs — absorb one interesting fact.',
     createdAt: 0,
-    duration: 90,
+    duration: 120,
   },
   {
     id: 'learn-3',
@@ -48,19 +48,19 @@ export const SEED_TASKS: Task[] = [
   {
     id: 'learn-4',
     category: 'learn',
-    text: `Name a keyboard shortcut you've always seen but never used. Look it up, try it once right now.`,
+    text: `Name a keyboard shortcut you've always seen but never used. Look it up and try it once right now.`,
     createdAt: 0,
-    duration: 60,
+    duration: 45,
   },
   {
     id: 'learn-5',
     category: 'learn',
     text: 'Say one thing out loud that you learned this week — even something tiny. Hearing it cements it.',
     createdAt: 0,
-    duration: 45,
+    duration: 30,
   },
 
-  // ── Absorb ─────────────────────────────────────────────────────
+  // ── Absorb (1min – 5min) ──────────────────────────────────────
   {
     id: 'absorb-1',
     category: 'absorb',
@@ -80,30 +80,30 @@ export const SEED_TASKS: Task[] = [
     category: 'absorb',
     text: `Open Libby and browse your library's available books. Find one you want to borrow.`,
     createdAt: 0,
-    duration: 120,
+    duration: 180,
   },
   {
     id: 'absorb-4',
     category: 'absorb',
     text: `Resume the book you've been neglecting. One page. That's all.`,
     createdAt: 0,
-    duration: 120,
+    duration: 300,
   },
   {
     id: 'absorb-5',
     category: 'absorb',
     text: `Read the first page of a book you haven't opened yet. Just the first page.`,
     createdAt: 0,
-    duration: 90,
+    duration: 120,
   },
 
-  // ── Hustle ─────────────────────────────────────────────────────
+  // ── Hustle (30s – 3min) ───────────────────────────────────────
   {
     id: 'hustle-1',
     category: 'hustle',
-    text: `Write three bullet points: what problem you're solving, who has that problem, and why you're the one to solve it.`,
+    text: `Write three bullet points: what problem you're solving, who has it, and why you're the one to solve it.`,
     createdAt: 0,
-    duration: 120,
+    duration: 180,
   },
   {
     id: 'hustle-2',
@@ -117,24 +117,24 @@ export const SEED_TASKS: Task[] = [
     category: 'hustle',
     text: `Block 20 minutes on tomorrow's calendar for the one task you keep delaying. Name it something honest.`,
     createdAt: 0,
-    duration: 90,
+    duration: 60,
   },
   {
     id: 'hustle-4',
     category: 'hustle',
     text: 'Write one honest sentence describing your current project to a stranger at a coffee shop.',
     createdAt: 0,
-    duration: 60,
+    duration: 45,
   },
   {
     id: 'hustle-5',
     category: 'hustle',
     text: 'Open your notes and delete or archive three things that are no longer relevant. Clear space, clear mind.',
     createdAt: 0,
-    duration: 90,
+    duration: 120,
   },
 
-  // ── Reset ──────────────────────────────────────────────────────
+  // ── Reset (30s – 2min) ────────────────────────────────────────
   {
     id: 'reset-1',
     category: 'reset',
@@ -154,20 +154,20 @@ export const SEED_TASKS: Task[] = [
     category: 'reset',
     text: 'Close your eyes. Feel your feet flat on the floor. Take five slow belly breaths. Count them.',
     createdAt: 0,
-    duration: 60,
+    duration: 45,
   },
   {
     id: 'reset-4',
     category: 'reset',
     text: `Write down one thing you're anxious about right now. Under it, write the one smallest possible next step.`,
     createdAt: 0,
-    duration: 90,
+    duration: 120,
   },
   {
     id: 'reset-5',
     category: 'reset',
-    text: 'Look out the nearest window for 60 seconds. No phone. No task. Just let your eyes go soft and rest.',
+    text: 'Look out the nearest window for 30 seconds. No phone. No task. Just let your eyes go soft and rest.',
     createdAt: 0,
-    duration: 60,
+    duration: 30,
   },
 ]

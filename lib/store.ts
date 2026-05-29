@@ -26,6 +26,9 @@ interface DopaState {
   stayLoggedIn: boolean
   // Feed filter
   enabledCategories: Category[]
+  // Productivity bank (seconds earned from completed tasks)
+  productivitySeconds: number
+  redeemedSeconds: number
 
   // Hydration
   setHasHydrated: (v: boolean) => void
@@ -62,6 +65,9 @@ interface DopaState {
 
   // Direct session logging (for inline feed flow)
   addSessionDirect: (session: Session) => void
+  // Productivity bank
+  addProductivitySeconds: (seconds: number) => void
+  redeemSeconds: (seconds: number) => void
 }
 
 export const useStore = create<DopaState>()(
@@ -81,6 +87,8 @@ export const useStore = create<DopaState>()(
       authReady: false,
       stayLoggedIn: false,
       enabledCategories: ['learn', 'absorb', 'hustle', 'reset'],
+      productivitySeconds: 0,
+      redeemedSeconds: 0,
 
       setHasHydrated: (v) => set({ _hasHydrated: v }),
 
@@ -205,6 +213,15 @@ export const useStore = create<DopaState>()(
 
       addSessionDirect: (session) =>
         set((state) => ({ sessions: [session, ...state.sessions] })),
+
+      addProductivitySeconds: (seconds) =>
+        set((state) => ({ productivitySeconds: state.productivitySeconds + seconds })),
+
+      redeemSeconds: (seconds) =>
+        set((state) => ({
+          redeemedSeconds: state.redeemedSeconds + seconds,
+          productivitySeconds: Math.max(0, state.productivitySeconds - seconds),
+        })),
     }),
     {
       name: 'dopa-v1',
