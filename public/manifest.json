@@ -4,8 +4,8 @@
   "description": "Turn scroll urges into 60-second wins.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0c0714",
-  "theme_color": "#0c0714",
+  "background_color": "#0e0b1a",
+  "theme_color": "#0e0b1a",
   "orientation": "portrait-primary",
   "icons": [
     {

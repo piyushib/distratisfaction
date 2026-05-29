@@ -77,7 +77,7 @@ function CircleTimer({
         <circle
           cx="28" cy="28" r={r}
           fill="none"
-          stroke={isLow ? '#e879f9' : '#a78bfa'}
+          stroke={isLow ? '#f0a8f8' : '#b89eff'}
           strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray={circ}
